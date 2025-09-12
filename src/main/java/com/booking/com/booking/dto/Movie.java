@@ -1,0 +1,192 @@
+package com.booking.com.booking.dto;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity(name = "movie")
+public class Movie {
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String description;
+    private String image;
+    private String trailer;
+    private String genre;
+    private String releaseDate;
+    private String rating;
+    private String duration;
+    private String language;
+    private String status;
+    private Long theatreId;
+    private Long showTimeId;
+    private boolean offerEligible;    
+    private Long offerId;
+    private Long bookingId;
+    private Long userId;
+
+    public Movie() {
+    }
+
+    public Movie(Long id, String name, String description, String image, String trailer, String genre,
+            String releaseDate, String rating, String duration, String language, String status, Long theatreId,
+            Long showTimeId, boolean offerEligible, Long offerId, Long bookingId, Long userId) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.trailer = trailer;
+        this.genre = genre;
+        this.releaseDate = releaseDate;
+        this.rating = rating;
+        this.duration = duration;
+        this.language = language;
+        this.status = status;
+        this.theatreId = theatreId;
+        this.showTimeId = showTimeId;
+        this.offerEligible = offerEligible;
+        this.offerId = offerId;
+        this.bookingId = bookingId;
+        this.userId = userId;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getTrailer() {
+        return trailer;
+    }
+
+    public void setTrailer(String trailer) {
+        this.trailer = trailer;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getTheatreId() {
+        return theatreId;
+    }
+
+    public void setTheatreId(Long theatreId) {
+        this.theatreId = theatreId;
+    }
+
+    public Long getShowTimeId() {
+        return showTimeId;
+    }
+
+    public void setShowTimeId(Long showTimeId) {
+        this.showTimeId = showTimeId;
+    }
+
+    public boolean isOfferEligible() {
+        return offerEligible;
+    }
+
+    public void setOfferEligible(boolean offerEligible) {
+        this.offerEligible = offerEligible;
+    }
+
+    public Long getOfferId() {
+        return offerId;
+    }
+
+    public void setOfferId(Long offerId) {
+        this.offerId = offerId;
+    }
+
+    public Long getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+}
