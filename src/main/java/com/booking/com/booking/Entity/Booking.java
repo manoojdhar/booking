@@ -1,4 +1,4 @@
-package com.booking.com.booking.dto;
+package com.booking.com.booking.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

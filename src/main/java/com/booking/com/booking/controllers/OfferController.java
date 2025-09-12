@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.booking.com.booking.dto.Offer;
+
+import com.booking.com.booking.Entity.Offer;
 import com.booking.com.booking.services.OfferService;
 
 @RestController

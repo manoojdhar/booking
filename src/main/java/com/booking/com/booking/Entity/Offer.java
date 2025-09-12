@@ -1,4 +1,4 @@
-package com.booking.com.booking.dto;
+package com.booking.com.booking.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,15 +16,13 @@ public class Offer {
     private String startDate;
     private String endDate;
     private String image;
-    private String movieName;
-    private String theatreName;
-    private String showTime;    
+    private boolean isActive;
 
     public Offer() {
     }
 
     public Offer(Long id, String name, String description, String discount, String startDate, String endDate,
-            String image, String movieName, String theatreName, String showTime) {
+            String image, boolean isActive) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,9 +30,7 @@ public class Offer {
         this.startDate = startDate;
         this.endDate = endDate;
         this.image = image;
-        this.movieName = movieName;
-        this.theatreName = theatreName;
-        this.showTime = showTime;
+        this.isActive = isActive;
     }
 
     // Getters and Setters
@@ -94,27 +90,11 @@ public class Offer {
         this.image = image;
     }
 
-    public String getMovieName() {
-        return movieName;
+    public boolean getIsActive() {
+        return isActive;
     }
 
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
-    }
-
-    public String getTheatreName() {
-        return theatreName;
-    }
-
-    public void setTheatreName(String theatreName) {
-        this.theatreName = theatreName;
-    }
-
-    public String getShowTime() {
-        return showTime;
-    }
-
-    public void setShowTime(String showTime) {
-        this.showTime = showTime;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }   
 }

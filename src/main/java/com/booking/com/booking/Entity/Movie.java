@@ -1,4 +1,4 @@
-package com.booking.com.booking.dto;
+package com.booking.com.booking.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,8 +23,6 @@ public class Movie {
     private Long theatreId;
     private Long showTimeId;
     private boolean offerEligible;    
-    private Long offerId;
-    private Long bookingId;
     private Long userId;
 
     public Movie() {
@@ -32,7 +30,7 @@ public class Movie {
 
     public Movie(Long id, String name, String description, String image, String trailer, String genre,
             String releaseDate, String rating, String duration, String language, String status, Long theatreId,
-            Long showTimeId, boolean offerEligible, Long offerId, Long bookingId, Long userId) {
+            Long showTimeId, boolean offerEligible, Long userId) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,11 +42,7 @@ public class Movie {
         this.duration = duration;
         this.language = language;
         this.status = status;
-        this.theatreId = theatreId;
-        this.showTimeId = showTimeId;
         this.offerEligible = offerEligible;
-        this.offerId = offerId;
-        this.bookingId = bookingId;
         this.userId = userId;
     }
 
@@ -165,22 +159,6 @@ public class Movie {
         this.offerEligible = offerEligible;
     }
 
-    public Long getOfferId() {
-        return offerId;
-    }
-
-    public void setOfferId(Long offerId) {
-        this.offerId = offerId;
-    }
-
-    public Long getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(Long bookingId) {
-        this.bookingId = bookingId;
-    }
-
     public Long getUserId() {
         return userId;
     }
@@ -188,5 +166,4 @@ public class Movie {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-
 }

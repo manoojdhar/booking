@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.booking.com.booking.dto.Theatre;
+
+import com.booking.com.booking.Entity.Theatre;
 import com.booking.com.booking.repositories.TheatreRepository;
 
 @Service    

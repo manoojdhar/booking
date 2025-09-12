@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.booking.com.booking.dto.Movie;
+import com.booking.com.booking.Entity.Movie;
 import com.booking.com.booking.services.MovieService;
 
 @RestController
