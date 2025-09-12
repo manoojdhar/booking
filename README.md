@@ -1,69 +1,145 @@
-# Demo Booking Application
+# Movie Booking System
+
+> By Manoj Dhar
+
+A comprehensive Spring Boot application for managing movie bookings, theatres, shows, and offers. This application provides RESTful APIs for managing the entire movie booking lifecycle.
 
 A Spring Boot application for managing a simple movie booking domain. It exposes REST APIs to manage Theatres, Movies, Offers, Shows, Audis, and Bookings.
 
-## Tech Stack
+## 🚀 Tech Stack
 
-- Java 21
-- Spring Boot 3.x
-  - spring-boot-starter-web
-  - spring-boot-starter-data-jpa
-- PostgreSQL (JDBC driver included)
-- Gradle (using the Gradle Wrapper)
+- **Java 21** - Modern Java LTS version
+- **Spring Boot 3.x** - For building the application
+  - Spring Web MVC - For REST APIs
+  - Spring Data JPA - For database operations
+  - Hibernate - As JPA implementation
+  - Hibernate Validator - For request validation
+  - SpringDoc OpenAPI - For API documentation
+- **PostgreSQL 15+** - Primary database
+- **Gradle** - Build tool with Gradle Wrapper
+- **Lombok** - For reducing boilerplate code
 
-## Project Structure
+## 🏗️ Project Structure
 
 ```
 / (project root)
-├── build.gradle
-├── settings.gradle
-├── gradlew / gradlew.bat
+├── build.gradle                # Gradle build configuration
+├── settings.gradle             # Gradle settings
+├── gradlew / gradlew.bat       # Gradle wrapper scripts
 ├── src/
 │   ├── main/
 │   │   ├── java/
 │   │   │   └── com/booking/com/booking/
-│   │   │       ├── BookingApplication.java
-│   │   │       ├── controllers/
+│   │   │       ├── BookingApplication.java    # Main application class
+│   │   │       ├── config/                   # Configuration classes
+|   |   |       ├── Exception/                # Exception classes   
+│   │   │       ├── controllers/              # REST controllers
+│   │   │       │   ├── AudiController.java
 │   │   │       │   ├── BookingController.java
 │   │   │       │   ├── MovieController.java
 │   │   │       │   ├── OfferController.java
 │   │   │       │   └── TheatreController.java
-│   │   │       ├── repositories/
+│   │   │       ├── repositories/             # JPA repositories
+│   │   │       │   ├── AudiRepository.java
 │   │   │       │   ├── BookingRepository.java
 │   │   │       │   ├── MovieRepository.java
 │   │   │       │   ├── OfferRepository.java
+│   │   │       │   ├── ShowRepository.java
 │   │   │       │   └── TheatreRepository.java
-│   │   │       ├── services/
+│   │   │       ├── services/                 # Business logic
+│   │   │       │   ├── AudiService.java
 │   │   │       │   ├── BookingService.java
 │   │   │       │   ├── MovieService.java
 │   │   │       │   ├── OfferService.java
 │   │   │       │   └── TheatreService.java
-│   │   │       └── Entity/
+│   │   │       └── Entity/                   # JPA entities
 │   │   │           ├── Audi.java
 │   │   │           ├── Booking.java
 │   │   │           ├── Movie.java
-│   │   │           ├── Offer.java
+│   │   │           ├── Offers.java
 │   │   │           ├── Show.java
 │   │   │           └── Theatre.java
 │   │   └── resources/
-│   │       └── application.properties (create this)
-│   └── test/
-└── README.md
+│   │       ├── application.yml              # Application configuration
+│   │       └── db/                          # Database scripts
+│   └── test/                                # Test classes
+│       └── java/com/booking/com/booking/
+│           ├── controllers/
+│           └── services/
+## ⚙️ Prerequisites
+
+- Java 21 JDK (verify with `java -version`)
+- PostgreSQL 15+ (or compatible version)
+- Gradle 8.x (included with wrapper)
+- Your favorite IDE (IntelliJ IDEA recommended)
+
+## 🔧 Configuration
+
+1. **Database Setup**
+   ```sql
+   CREATE DATABASE bookingdb;
+   CREATE USER booking_user WITH PASSWORD 'your_secure_password';
+   GRANT ALL PRIVILEGES ON DATABASE bookingdb TO booking_user;
+   ```
+
+2. **Application Configuration**
+   Update `src/main/resources/application.yml` with your database credentials:
+   ```yaml
+   spring:
+     datasource:
+       url: jdbc:postgresql://localhost:5432/bookingdb
+       username: booking_user
+       password: your_secure_password
+   ```
+
+## 🚀 Running the Application
+
+1. **Using Gradle Wrapper**
+   ```bash
+   ./gradlew bootRun
+   ```
+
+2. **Build and Run**
+   ```bash
+   ./gradlew build
+   java -jar build/libs/booking-0.0.1-SNAPSHOT.jar
+   ```
+
+   The application will be available at: http://localhost:8000
+
+## 📚 API Documentation
+
+Once the application is running, you can access:
+
+- **Swagger UI**: http://localhost:8000/swagger-ui.html
+- **OpenAPI JSON**: http://localhost:8000/api-docs
+
+## 🧪 Testing
+
+Run the test suite with:
+```bash
+./gradlew test
 ```
 
-## Prerequisites
+## 📦 Dependencies
 
-- Java 21 installed (verify with `java -version`).
-- PostgreSQL running locally or accessible remotely.
+Key dependencies used in this project:
 
-## Configuration
+- Spring Boot 3.x
+- Spring Data JPA
+- Hibernate
+- Lombok
+- PostgreSQL Driver
+- SpringDoc OpenAPI
+- Hibernate Validator
+- Spring Boot DevTools
 
 Create `src/main/resources/application.properties` and configure your database connection:
 
 ```
-spring.datasource.url=jdbc:postgresql://localhost:5432/booking
-spring.datasource.username=postgres
-spring.datasource.password=postgres
+spring.datasource.url=jdbc:postgresql://localhost:5432/bookingdbname
+spring.datasource.username=postgresUsername
+spring.datasource.password=postgresPassword
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
@@ -90,133 +166,111 @@ Adjust the values according to your environment.
 
 The app starts on `http://localhost:8080` by default.
 
-## REST API Overview
+## 🌐 API Endpoints
 
-Base URLs used below assume default port 8080. JSON bodies are illustrative; adjust fields to match your entities.
+### 🎭 Theatres
 
-### Theatres
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET`    | `/api/v1/theatres` | Get all theatres |
+| `POST`   | `/api/v1/theatres` | Create a new theatre |
+| `GET`    | `/api/v1/theatres/{id}` | Get a specific theatre |
+| `PUT`    | `/api/v1/theatres/{id}` | Update a theatre |
+| `DELETE` | `/api/v1/theatres/{id}` | Delete a theatre |
 
-- GET all theatres
+### 🎬 Movies
 
-```
-curl -X GET http://localhost:8080/api/v1/theatres
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET`    | `/api/v1/movies` | Get all movies |
+| `POST`   | `/api/v1/movies` | Create a new movie |
+| `GET`    | `/api/v1/movies/{id}` | Get a specific movie |
+| `PUT`    | `/api/v1/movies/{id}` | Update a movie |
+| `DELETE` | `/api/v1/movies/{id}` | Delete a movie |
 
-- GET theatre by id
+### 🎁 Offers
 
-```
-curl -X GET http://localhost:8080/api/v1/theatres/1
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET`    | `/api/v1/offers` | Get all offers |
+| `POST`   | `/api/v1/offers` | Create a new offer |
+| `GET`    | `/api/v1/offers/{id}` | Get a specific offer |
+| `PUT`    | `/api/v1/offers/{id}` | Update an offer |
+| `DELETE` | `/api/v1/offers/{id}` | Delete an offer |
 
-- POST create theatre
+### 🎟️ Bookings
 
-```
-curl -X POST http://localhost:8080/api/v1/theatres \
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET`    | `/api/v1/bookings` | Get all bookings |
+| `POST`   | `/api/v1/bookings` | Create a new booking |
+| `GET`    | `/api/v1/bookings/{id}` | Get a specific booking |
+| `PUT`    | `/api/v1/bookings/{id}` | Update a booking |
+| `DELETE` | `/api/v1/bookings/{id}` | Delete a booking |
+
+## 📝 Examples
+
+### Create a New Theatre
+
+```bash
+curl -X POST http://localhost:8000/api/v1/theatres \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "PVR Orion",
-    "city": "Bengaluru",
-    "state": "KA",
-    "pincode": "560055",
-    "location": "Orion Mall",
-    "phone": "+91-9999999999",
-    "email": "info@pvrorion.com",
-    "website": "https://pvr.com",
-    "image": "https://.../theatre.jpg"
+    "name": "PVR Cinemas",
+    "location": "MG Road",
+    "city": "Bangalore",
+    "state": "Karnataka",
+    "pincode": "560001",
+    "phone": "+911234567890",
+    "email": "info@pvr.com",
+    "website": "https://www.pvrcinemas.com"
   }'
 ```
 
-- PUT update theatre
+### Create a New Movie
 
-```
-curl -X PUT http://localhost:8080/api/v1/theatres/1 \
-  -H "Content-Type: application/json" \
-  -d '{ "name": "PVR Orion - Updated" }'
-```
-
-- DELETE theatre
-
-```
-curl -X DELETE http://localhost:8080/api/v1/theatres/1
-```
-
-### Movies
-
-- GET all movies
-
-```
-curl -X GET http://localhost:8080/api/v1/movies
-```
-
-- GET movie by id
-
-```
-curl -X GET http://localhost:8080/api/v1/movies/1
-```
-
-- POST create movie
-
-```
-curl -X POST http://localhost:8080/api/v1/movies \
+```bash
+curl -X POST http://localhost:8000/api/v1/movies \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Inception",
-    "description": "Sci-fi thriller",
-    "language": "EN"
+    "description": "A thief who steals corporate secrets through the use of dream-sharing technology...",
+    "duration": "148",
+    "genre": "Sci-Fi",
+    "language": "English",
+    "releaseDate": "2023-07-15",
+    "status": "RELEASED"
   }'
 ```
 
-- PUT update movie
+### Create a New Booking
 
-```
-curl -X PUT http://localhost:8080/api/v1/movies/1 \
-  -H "Content-Type: application/json" \
-  -d '{ "name": "Inception - Director\'s Cut" }'
-```
-
-- DELETE movie
-
-```
-curl -X DELETE http://localhost:8080/api/v1/movies/1
-```
-
-### Offers
-
-- GET all offers
-
-```
-curl -X GET http://localhost:8080/api/v1/offers
-```
-
-- GET offer by id
-
-```
-curl -X GET http://localhost:8080/api/v1/offers/1
-```
-
-- POST create offer
-
-```
-curl -X POST http://localhost:8080/api/v1/offers \
+```bash
+curl -X POST http://localhost:8000/api/v1/bookings \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Festive10",
-    "description": "10% off",
-    "discount": "10%",
-    "isActive": true
+    "movieId": 1,
+    "theatreId": 1,
+    "showTime": "2023-07-20T18:30:00",
+    "seatNumber": "A12",
+    "userId": 1
   }'
 ```
 
-- PUT update offer
+## 🚨 Error Handling
 
-```
-curl -X PUT http://localhost:8080/api/v1/offers/1 \
-  -H "Content-Type: application/json" \
-  -d '{ "description": "Flat 10% off" }'
-```
+The API returns appropriate HTTP status codes and structured error responses.
 
-- DELETE offer
+Example error response (404 Not Found):
 
+```json
+{
+  "timestamp": "2023-07-15T12:34:56.789+00:00",
+  "status": 404,
+  "error": "Not Found",
+  "message": "Theatre not found with id: 999",
+  "path": "/api/v1/theatres/999"
+}
 ```
 curl -X DELETE http://localhost:8080/api/v1/offers/1
 ```
