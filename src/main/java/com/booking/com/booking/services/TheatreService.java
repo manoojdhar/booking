@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.booking.com.booking.Entity.Theatre;
 import com.booking.com.booking.repositories.TheatreRepository;
@@ -12,10 +13,17 @@ import com.booking.com.booking.repositories.TheatreRepository;
 public class TheatreService {
     @Autowired
     private TheatreRepository theatreRepository;
-    public void addTheatre(Theatre theatre) {
-        System.out.println("TheatreService.addTheatre() called");
-        theatreRepository.save(theatre);
-    }
+    
+    
+    @Transactional
+    public Theatre addTheatre(Theatre theatre) {
+    // Set the theatre for each audi before saving
+    // if(theatre.getName() == theatreRepository.findByName(theatre.getName()) && theatre.getLocation() == theatreRepository.findByLocation(theatre.getLocation())) {
+    //     throw new RuntimeException("Theatre already exists");
+    // }
+    theatre.getAudis().forEach(audi -> audi.setTheatre(theatre));
+    return theatreRepository.save(theatre);
+}
     
     public List<Theatre> getTheatres() {
         return theatreRepository.findAll();
@@ -29,7 +37,7 @@ public class TheatreService {
         theatreRepository.deleteById(id);
     }
 
-    public void updateTheatre(Long id, Theatre theatre) {
+    public Theatre updateTheatre(Long id, Theatre theatre) {
         Theatre theatre1 = theatreRepository.findById(id).orElse(null);
         if (theatre1 != null) {
             theatre1.setName(theatre.getName());
@@ -42,7 +50,9 @@ public class TheatreService {
             theatre1.setWebsite(theatre.getWebsite());
             theatre1.setImage(theatre.getImage());
             theatreRepository.save(theatre1);
+            return theatre1;
         }
+        return null;
     }
 }
     

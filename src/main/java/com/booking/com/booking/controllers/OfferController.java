@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.booking.com.booking.Entity.Offer;
+import com.booking.com.booking.Entity.Offers;
 import com.booking.com.booking.services.OfferService;
 
 @RestController
@@ -24,18 +24,19 @@ public class OfferController {
     private OfferService offerService;
     
     @GetMapping
-    public ResponseEntity<List<Offer>> getAllOffers() {
+    public ResponseEntity<List<Offers>> getAllOffers() {
         return ResponseEntity.ok(offerService.getOffers());
     }
 
     @PostMapping
-    public ResponseEntity<String> addOffer(@RequestBody Offer offer) {
+    public ResponseEntity<Offers> addOffer(@RequestBody Offers offer) {
+        System.out.println("Welcome: "+ offer);
         offerService.addOffer(offer);
-        return ResponseEntity.ok("Offer added successfully");
+        return ResponseEntity.ok(offer);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Offer> getOfferById(@PathVariable Long id) {
+    public ResponseEntity<Offers> getOfferById(@PathVariable Long id) {
         return ResponseEntity.ok(offerService.getOfferById(id));
     }
 
@@ -46,8 +47,8 @@ public class OfferController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateOffer(@PathVariable Long id, @RequestBody Offer offer) {
-        offerService.updateOffer(id, offer);
-        return ResponseEntity.ok("Offer updated successfully");
+    public ResponseEntity<Offers> updateOffer(@PathVariable Long id, @RequestBody Offers offer) {
+        Offers offer1 = offerService.updateOffer(id, offer);
+        return ResponseEntity.ok(offer1);
     }
 }

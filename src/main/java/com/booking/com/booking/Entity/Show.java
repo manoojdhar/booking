@@ -2,6 +2,9 @@ package com.booking.com.booking.Entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,17 +28,14 @@ public class Show {
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> bookings;
     
-    @ManyToMany(mappedBy = "show", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Audi> audis;
     
-    @ManyToMany(mappedBy = "show", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "shows", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Movie> movies;
     
     @OneToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Offer offers;
-    
-    @ManyToMany(mappedBy = "show", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Theatre> theatres;
+    private Offers offers;
     private String startTime;
     private String endTime; 
     private String date;
@@ -43,14 +43,18 @@ public class Show {
     private String type;
     private String ticketPrice;
     private String status;
+
+    @CreationTimestamp
     private String createdAt;
+    
+    @UpdateTimestamp
     private String updatedAt;
 
     public Show() {
     }
 
     public Show(Long id, String name, String description, String image, List<Booking> bookings, List<Audi> audis,
-            List<Movie> movies, Offer offers, List<Theatre> theatres, String startTime, String endTime,
+            List<Movie> movies, Offers offers, String startTime, String endTime,
             String date, String language, String type, String ticketPrice, String status, String createdAt,
             String updatedAt) {
         this.id = id;
@@ -61,7 +65,6 @@ public class Show {
         this.audis = audis;
         this.movies = movies;
         this.offers = offers;
-        this.theatres = theatres;
         this.startTime = startTime;
         this.endTime = endTime;
         this.date = date;
@@ -130,11 +133,11 @@ public class Show {
         this.movies = movies;
     }
 
-    public Offer getOffers() {
+    public Offers getOffers() {
         return offers;
     }
 
-    public void setOffers(Offer offers) {
+    public void setOffers(Offers offers) {
         this.offers = offers;
     }
 

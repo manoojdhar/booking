@@ -1,33 +1,53 @@
 package com.booking.com.booking.Entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
-@Entity(name = "offer")
-public class Offer {
+@Entity
+@Table(name = "offers", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "isActive"}) } )
+public class Offers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
     private String discount;
-    private String startDate;
-    private String endDate;
+
+     
+    @CreationTimestamp
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", name = "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;  
+
     private String image;
     private boolean isActive;
 
-    public Offer() {
+    public Offers() {
     }
 
-    public Offer(Long id, String name, String description, String discount, String startDate, String endDate,
+    public Offers(Long id, String name, String description, String discount, LocalDateTime startDate, LocalDateTime endDate,
             String image, boolean isActive) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.discount = discount;
-        this.startDate = startDate;
+        this.startDate = startDate; 
         this.endDate = endDate;
         this.image = image;
         this.isActive = isActive;
@@ -66,19 +86,19 @@ public class Offer {
         this.discount = discount;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public LocalDateTime getStartDate() {
+        return startDate; 
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -97,4 +117,11 @@ public class Offer {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }   
+
+    @Override
+    public String toString() {  
+        return "Offer [id=" + id + ", name=" + name + ", description=" + description + ", discount=" + discount
+                + ", startDate=" + startDate + ", endDate=" + endDate + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+                + ", image=" + image + ", isActive=" + isActive + "]";
+    }
 }

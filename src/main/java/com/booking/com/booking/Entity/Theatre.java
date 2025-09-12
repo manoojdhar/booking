@@ -2,40 +2,53 @@ package com.booking.com.booking.Entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.CascadeType;
 
-@Entity(name = "theatre")   
+@Entity
+@Table( name = "theatres", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "city"}) } )
 public class Theatre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String location;
     private String city;
     private String state;
+    
     private String pincode;
+
     private String phone;
     private String email;   
+
     private String website;
+
     private String image;
     
     @OneToMany(mappedBy = "theatre", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Audi> audis;
     
+    @CreationTimestamp
     private String createdAt;
+    
+    @UpdateTimestamp
     private String updatedAt;   
 
     public Theatre() {
     }
 
     public Theatre(Long id, String name, String location, String city, String state, String pincode, String phone,
-            String email, String website, String image, List<Audi> audis, String updatedAt, String createdAt) {
+            String email, String website, String image, List<Audi> audis, String createdAt, String updatedAt) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -149,12 +162,42 @@ public class Theatre {
         this.updatedAt = updatedAt;
     }
 
+    public void addAudi(Audi audi) {
+        audis.add(audi);
+        audi.setTheatre(this);
+    }
+
+    public Audi getAudiById(Long id) {
+        return audis.stream().filter(audi -> audi.getId().equals(id)).findFirst().orElse(null);
+    }
+
     public List<Audi> getAudis() {
         return audis;
     }
 
     public void setAudis(List<Audi> audis) {
         this.audis = audis;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Theatre)) return false;
+        Theatre theatre = (Theatre) o;
+        return id != null && id.equals(theatre.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Theatre [id=" + id + ", name=" + name + ", location=" + location + ", city=" + city + ", state=" + state
+                + ", pincode=" + pincode + ", phone=" + phone + ", email=" + email + ", website=" + website
+                + ", image=" + image + ", audis=" + audis + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+                + "]";
     }
 
 }

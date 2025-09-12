@@ -1,5 +1,6 @@
 package com.booking.com.booking.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.booking.com.booking.Entity.Theatre;
 import com.booking.com.booking.services.TheatreService;
 
@@ -30,8 +31,16 @@ public class TheatreController {
 
     @PostMapping
     public ResponseEntity<String> addTheatre(@RequestBody Theatre theatre) {
-        theatreService.addTheatre(theatre);
-        return ResponseEntity.ok("Theatre added successfully");
+       Theatre theatre1 = theatreService.addTheatre(theatre);
+       if(theatre1.getId() != null) {
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+        .path("/{id}")
+        .buildAndExpand(theatre1.getId())
+        .toUri();
+        return ResponseEntity.created(location).body("Theatre added successfully");   
+       }       
+        // System.out.println(theatre.toString());
+       return ResponseEntity.badRequest().body("Theatre not added");
     }
 
     @GetMapping("/{id}")

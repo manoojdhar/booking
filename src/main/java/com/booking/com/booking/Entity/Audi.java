@@ -6,8 +6,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-@Entity(name = "audi")
+@Entity(name = "audis") 
+@Table(name = "audis", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "theatre_id"}) } )    
 public class Audi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,28 +22,33 @@ public class Audi {
     private String image;
     private Integer capacity;        
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theatre_id", nullable = false)  
     private Theatre theatre;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "show_id")
     private Show show;
     
+    @CreationTimestamp
     private String createdAt;
+    
+    @UpdateTimestamp
     private String updatedAt;
     
     
     public Audi() {
     }
 
-    public Audi(Long id, String name, Theatre theatre, Integer capacity, String image, Show show) {
+    public Audi(Long id, String name, Theatre theatre, Integer capacity, String image, Show show, String createdAt, String updatedAt) {
         this.id = id;
         this.name = name;
         this.theatre = theatre;
         this.capacity = capacity;
         this.image = image;
         this.show = show;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     // Getters and Setters
@@ -73,14 +84,6 @@ public class Audi {
         this.capacity = capacity;
     }
 
-    public Theatre getTheatre() {
-        return theatre;
-    }
-
-    public void setTheatre(Theatre theatre) {
-        this.theatre = theatre;
-    }
-
     public String getImage() {
         return image;
     }
@@ -104,5 +107,19 @@ public class Audi {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public Theatre getTheatre() {
+        return theatre;
+    }
+
+    public void setTheatre(Theatre theatre) {
+        this.theatre = theatre;
+    }
+
+    // @Override
+    // public String toString() {
+    //     return "Audi [id=" + id + ", name=" + name + ", theatre=" + theatre + ", capacity=" + capacity + ", image="
+    //             + image + ", show=" + show + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+    // }   
 
 }

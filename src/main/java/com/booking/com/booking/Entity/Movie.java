@@ -1,9 +1,17 @@
 package com.booking.com.booking.Entity;
 
+import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 
 @Entity(name = "movie")
 public class Movie {
@@ -17,6 +25,14 @@ public class Movie {
     private String genre;
     private String releaseDate;
     private String rating;
+
+    @ManyToMany
+    @JoinTable(
+        name = "movie_show",
+        joinColumns = @JoinColumn(name = "movie_id"),
+        inverseJoinColumns = @JoinColumn(name = "show_id")
+    )
+    private List<Show> shows;   
     private String duration;
     private String language;
     private String status;
@@ -25,12 +41,18 @@ public class Movie {
     private boolean offerEligible;    
     private Long userId;
 
+    @CreationTimestamp
+    private String createdAt;
+    
+    @UpdateTimestamp
+    private String updatedAt;
+
     public Movie() {
     }
 
     public Movie(Long id, String name, String description, String image, String trailer, String genre,
             String releaseDate, String rating, String duration, String language, String status, Long theatreId,
-            Long showTimeId, boolean offerEligible, Long userId) {
+            Long showTimeId, boolean offerEligible, Long userId, String createdAt, String updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,6 +66,8 @@ public class Movie {
         this.status = status;
         this.offerEligible = offerEligible;
         this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     // Getters and Setters
@@ -165,5 +189,13 @@ public class Movie {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public List<Show> getShows() {
+        return shows;
+    }
+
+    public void setShows(List<Show> shows) {
+        this.shows = shows;
     }
 }
