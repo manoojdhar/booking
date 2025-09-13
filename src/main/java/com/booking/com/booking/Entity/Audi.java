@@ -1,7 +1,6 @@
 package com.booking.com.booking.Entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
