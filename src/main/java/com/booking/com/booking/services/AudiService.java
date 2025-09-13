@@ -1,44 +1,45 @@
 package com.booking.com.booking.services;
 
-import java.util.List;
-
+import com.booking.com.booking.Entity.Audi;
+import com.booking.com.booking.repositories.AudiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.booking.com.booking.Entity.Audi;
-import com.booking.com.booking.repositories.AudiRepository;
+import java.util.List;
 
-@Service    
+@Service
 public class AudiService {
+
     @Autowired
     private AudiRepository audiRepository;
-    public void addAudi(Audi audi) {
-        System.out.println("AudiService.addAudi() called");
-        audiRepository.save(audi);
+
+    public Audi addAudi(Audi audi) {
+        return audiRepository.save(audi);
     }
-    
+
     public List<Audi> getAudis() {
         return audiRepository.findAll();
     }
-    
+
     public Audi getAudiById(Long id) {
         return audiRepository.findById(id).orElse(null);
     }
-    
-    public void deleteAudi(Long id) {
-        audiRepository.deleteById(id);
+
+    public boolean deleteAudi(Long id) {
+        if (audiRepository.existsById(id)) {
+            audiRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
-    public void updateAudi(Long id, Audi audi) {    
-        Audi audi1 = audiRepository.findById(id).orElse(null);
-        if (audi1 != null) {
-            audi1.setName(audi.getName());
-            audi1.setCapacity(audi.getCapacity());
-            audi1.setTheatre(audi.getTheatre());
-            audi1.setShow(audi.getShow());
-            audi1.setCreatedAt(audi.getCreatedAt());
-            audi1.setUpdatedAt(audi.getUpdatedAt());
-            audiRepository.save(audi1);
-        }
+    public Audi updateAudi(Long id, Audi updatedAudi) {
+        return audiRepository.findById(id).map(existing -> {
+            existing.setName(updatedAudi.getName());
+            existing.setCapacity(updatedAudi.getCapacity());
+            existing.setImage(updatedAudi.getImage());
+            // Do not update `theatre` directly unless you want to reassign
+            return audiRepository.save(existing);
+        }).orElse(null);
     }
 }

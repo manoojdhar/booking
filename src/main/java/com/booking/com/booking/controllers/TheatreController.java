@@ -30,17 +30,17 @@ public class TheatreController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addTheatre(@RequestBody Theatre theatre) {
+    public ResponseEntity<Theatre> addTheatre(@RequestBody Theatre theatre) {
        Theatre theatre1 = theatreService.addTheatre(theatre);
        if(theatre1.getId() != null) {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
         .buildAndExpand(theatre1.getId())
         .toUri();
-        return ResponseEntity.created(location).body("Theatre added successfully");   
+        return ResponseEntity.created(location).body(theatre1);   
        }       
         // System.out.println(theatre.toString());
-       return ResponseEntity.badRequest().body("Theatre not added");
+       return ResponseEntity.badRequest().body(null);
     }
 
     @GetMapping("/{id}")
@@ -49,14 +49,14 @@ public class TheatreController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTheatre(@PathVariable Long id) {
+    public ResponseEntity<Theatre> deleteTheatre(@PathVariable Long id) {
         theatreService.deleteTheatre(id);
-        return ResponseEntity.ok("Theatre deleted successfully");
+        return ResponseEntity.ok(theatreService.getTheatreById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTheatre(@PathVariable Long id, @RequestBody Theatre theatre) {
+    public ResponseEntity<Theatre> updateTheatre(@PathVariable Long id, @RequestBody Theatre theatre) {
         theatreService.updateTheatre(id, theatre);
-        return ResponseEntity.ok("Theatre updated successfully");
+        return ResponseEntity.ok(theatreService.getTheatreById(id));
     }
 }

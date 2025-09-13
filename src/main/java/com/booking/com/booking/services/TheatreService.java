@@ -1,58 +1,93 @@
 package com.booking.com.booking.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.booking.com.booking.Entity.Audi;
 import com.booking.com.booking.Entity.Theatre;
 import com.booking.com.booking.repositories.TheatreRepository;
 
 @Service    
 public class TheatreService {
-    @Autowired
+    
+    // Autowired TheatreRepository 
+    @Autowired 
     private TheatreRepository theatreRepository;
     
     
     @Transactional
+    // Add Theatre with Audis and Shows
     public Theatre addTheatre(Theatre theatre) {
-    // Set the theatre for each audi before saving
-    // if(theatre.getName() == theatreRepository.findByName(theatre.getName()) && theatre.getLocation() == theatreRepository.findByLocation(theatre.getLocation())) {
-    //     throw new RuntimeException("Theatre already exists");
-    // }
-    theatre.getAudis().forEach(audi -> audi.setTheatre(theatre));
-    return theatreRepository.save(theatre);
-}
+        theatre.getAudis().forEach(audi -> audi.setTheatre(theatre));
+        return theatreRepository.save(theatre);
+    }
     
+    // Get All Theatres
     public List<Theatre> getTheatres() {
         return theatreRepository.findAll();
     }
     
+    // Get Theatre by ID
     public Theatre getTheatreById(Long id) {
         return theatreRepository.findById(id).orElse(null);
     }
     
-    public void deleteTheatre(Long id) {
+    // Delete Theatre with Audis and Shows
+    public Theatre deleteTheatre(Long id) {
+        Theatre theatre = theatreRepository.findById(id).orElse(null);
         theatreRepository.deleteById(id);
+        return theatre;
     }
 
-    public Theatre updateTheatre(Long id, Theatre theatre) {
-        Theatre theatre1 = theatreRepository.findById(id).orElse(null);
-        if (theatre1 != null) {
-            theatre1.setName(theatre.getName());
-            theatre1.setLocation(theatre.getLocation());
-            theatre1.setCity(theatre.getCity());
-            theatre1.setState(theatre.getState());
-            theatre1.setPincode(theatre.getPincode());
-            theatre1.setPhone(theatre.getPhone());
-            theatre1.setEmail(theatre.getEmail());
-            theatre1.setWebsite(theatre.getWebsite());
-            theatre1.setImage(theatre.getImage());
-            theatreRepository.save(theatre1);
-            return theatre1;
+    // Update Theatre with Audis and Shows 
+    public Theatre updateTheatre(Long id, Theatre updatedTheatre) {
+        Theatre existingTheatre = theatreRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Theatre not found"));
+    
+        // Update basic fields
+        existingTheatre.setName(updatedTheatre.getName());
+        existingTheatre.setLocation(updatedTheatre.getLocation());
+        existingTheatre.setCity(updatedTheatre.getCity());
+        existingTheatre.setState(updatedTheatre.getState());
+        existingTheatre.setPincode(updatedTheatre.getPincode());
+        existingTheatre.setPhone(updatedTheatre.getPhone());
+        existingTheatre.setEmail(updatedTheatre.getEmail());
+        existingTheatre.setWebsite(updatedTheatre.getWebsite());
+        existingTheatre.setImage(updatedTheatre.getImage());
+    
+        // Prepare existing audis in map
+        Map<Long, Audi> existingAudiMap = existingTheatre.getAudis().stream()
+            .filter(audi -> audi.getId() != null)
+            .collect(Collectors.toMap(Audi::getId, Function.identity()));
+    
+        // Now process incoming audis
+        if (updatedTheatre.getAudis() != null) {
+            for (Audi incoming : updatedTheatre.getAudis()) {
+                if (incoming.getId() != null && existingAudiMap.containsKey(incoming.getId())) {
+                    // Update existing
+                    Audi existingAudi = existingAudiMap.get(incoming.getId());
+                    existingAudi.setName(incoming.getName());
+                    existingAudi.setCapacity(incoming.getCapacity());
+                    existingAudi.setImage(incoming.getImage());
+                } else {
+                    // New Audi
+                    incoming.setTheatre(existingTheatre);
+                    existingTheatre.getAudis().add(incoming);
+                }
+            }
         }
-        return null;
+    
+        // Don't remove or clear existing audis — keep untouched ones
+    
+        return theatreRepository.save(existingTheatre);
     }
+    
+
 }
     

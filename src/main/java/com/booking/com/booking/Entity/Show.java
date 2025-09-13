@@ -1,6 +1,6 @@
 package com.booking.com.booking.Entity;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,11 +9,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 
 @Entity(name = "show")
 public class Show {
@@ -25,20 +25,29 @@ public class Show {
     private String description;
     private String image;
     
-    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Booking> bookings;
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    private Movie movie;
+
+    @ManyToOne
+    @JoinColumn(name = "audi_id")
+    private Audi audi;
+
+    @ManyToOne
+    @JoinColumn(name = "theatre_id")
+    private Theatre theatre;
+
+    @ManyToOne
+    @JoinColumn(name = "offer_id", nullable = true)
+    private Offers offer;
     
-    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Audi> audis;
-    
-    @ManyToMany(mappedBy = "shows", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Movie> movies;
-    
-    @OneToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Offers offers;
-    private String startTime;
-    private String endTime; 
-    private String date;
+
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    // private String date;
     private String language;
     private String type;
     private String ticketPrice;
@@ -53,27 +62,24 @@ public class Show {
     public Show() {
     }
 
-    public Show(Long id, String name, String description, String image, List<Booking> bookings, List<Audi> audis,
-            List<Movie> movies, Offers offers, String startTime, String endTime,
-            String date, String language, String type, String ticketPrice, String status, String createdAt,
-            String updatedAt) {
+    public Show(Long id, String name, String description, String image, Movie movie, Audi audi,
+            Offers offers, LocalDateTime startTime, LocalDateTime endTime,
+            String language, String type, String ticketPrice, String status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
-        this.bookings = bookings;
-        this.audis = audis;
-        this.movies = movies;
+        this.audi = audi;
+        this.movie = movie;
         this.offers = offers;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.date = date;
         this.language = language;
         this.type = type;
         this.ticketPrice = ticketPrice;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        // this.createdAt = createdAt;
+        // this.updatedAt = updatedAt;
     }   
 
     // Getters and Setters
@@ -109,61 +115,46 @@ public class Show {
         this.image = image;
     }
 
-    public List<Booking> getBookings() {
-        return bookings;
+    public Audi getAudis() {
+        return this.audi;
     }
 
-    public void setBookings(List<Booking> bookings) {
-        this.bookings = bookings;
+    public void setAudis(Audi audi) {
+        this.audi = audi;
     }
 
-    public List<Audi> getAudis() {
-        return audis;
+    public Movie getMovies() {
+        return this.movie;
     }
 
-    public void setAudis(List<Audi> audis) {
-        this.audis = audis;
-    }
-
-    public List<Movie> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
+    public void setMovies(Movie movie) {
+        this.movie = movie;
     }
 
     public Offers getOffers() {
-        return offers;
+        return this.offers;
     }
 
     public void setOffers(Offers offers) {
         this.offers = offers;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public LocalDateTime getStartTime() {
+        return this.startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public LocalDateTime getEndTime() {
+        return this.endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
 
     public String getLanguage() {
         return language;
@@ -196,23 +187,4 @@ public class Show {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    
-    
 }

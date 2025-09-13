@@ -18,20 +18,25 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public void addMovie(Movie movie) {
+    public Movie addMovie(Movie movie) {
         movieRepository.save(movie);
+        return movie;
     }
 
     public Movie getMovieById(Long id) {
         return movieRepository.findById(id).orElse(null);
     }
 
-    public void deleteMovie(Long id) {
-        movieRepository.deleteById(id);
+    public Movie deleteMovie(Long id) {
+        Movie movie = movieRepository.findById(id).orElse(null);
+        movieRepository.deleteById(id); 
+        return movie;
     }
 
-    public void updateMovie(Long id, Movie movie) {
+    public Movie updateMovie(Long id, Movie movie) {
+        Movie movie1 = movieRepository.findById(id).orElse(null);
         movieRepository.save(movie);
+        return movie1;  
     }
 
 

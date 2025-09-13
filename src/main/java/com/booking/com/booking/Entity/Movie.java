@@ -1,73 +1,95 @@
 package com.booking.com.booking.Entity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-@Entity(name = "movie")
+@Entity
+@Table(name = "movies")
 public class Movie {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    
+    private String title;
     private String description;
-    private String image;
+    private String poster;
     private String trailer;
-    private String genre;
-    private String releaseDate;
-    private String rating;
 
-    @ManyToMany
-    @JoinTable(
-        name = "movie_show",
-        joinColumns = @JoinColumn(name = "movie_id"),
-        inverseJoinColumns = @JoinColumn(name = "show_id")
-    )
-    private List<Show> shows;   
-    private String duration;
+    @ElementCollection
+    @CollectionTable(name = "movie_directors", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "director")
+    private List<String> director;
+
+    @ElementCollection
+    @CollectionTable(name = "movie_cast", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "movie_cast") // Avoid using reserved word "cast"
+    private List<String> cast;
+
+    @ElementCollection
+    @CollectionTable(name = "movie_genres", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "genre")
+    private List<String> genre;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate releaseDate;
+    
+    private String rating;
+    private int durationMinutes;
     private String language;
     private String status;
-    private Long theatreId;
-    private Long showTimeId;
-    private boolean offerEligible;    
+    private boolean offerEligible;
     private Long userId;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    private List<Show> shows;
 
     @CreationTimestamp
     private String createdAt;
-    
+
     @UpdateTimestamp
     private String updatedAt;
 
-    public Movie() {
-    }
+    // Constructors
+    public Movie() {}
 
-    public Movie(Long id, String name, String description, String image, String trailer, String genre,
-            String releaseDate, String rating, String duration, String language, String status, Long theatreId,
-            Long showTimeId, boolean offerEligible, Long userId, String createdAt, String updatedAt) {
+    public Movie(Long id, String title, String description, String poster, String trailer, List<String> genre,
+                 LocalDate releaseDate, String rating, int durationMinutes, String language, String status,
+                 boolean offerEligible, Long userId, String createdAt, String updatedAt,
+                 List<String> director, List<String> castMembers) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.description = description;
-        this.image = image;
+        this.poster = poster;
         this.trailer = trailer;
         this.genre = genre;
         this.releaseDate = releaseDate;
         this.rating = rating;
-        this.duration = duration;
+        this.durationMinutes = durationMinutes;
         this.language = language;
         this.status = status;
         this.offerEligible = offerEligible;
         this.userId = userId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.director = director;
+        this.cast = castMembers;
     }
 
     // Getters and Setters
@@ -79,12 +101,12 @@ public class Movie {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -95,12 +117,12 @@ public class Movie {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getPoster() {
+        return poster;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setPoster(String poster) {
+        this.poster = poster;
     }
 
     public String getTrailer() {
@@ -111,19 +133,35 @@ public class Movie {
         this.trailer = trailer;
     }
 
-    public String getGenre() {
+    public List<String> getDirector() {
+        return director;
+    }
+
+    public void setDirector(List<String> director) {
+        this.director = director;
+    }
+
+    public List<String> getCast() {
+        return cast;
+    }
+
+    public void setCast(List<String> castMembers) {
+        this.cast = castMembers;
+    }
+
+    public List<String> getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(List<String> genre) {
         this.genre = genre;
     }
 
-    public String getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -135,12 +173,12 @@ public class Movie {
         this.rating = rating;
     }
 
-    public String getDuration() {
-        return duration;
+    public int getDurationMinutes() {
+        return durationMinutes;
     }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
+    public void setDurationMinutes(int durationMinutes) {
+        this.durationMinutes = durationMinutes;
     }
 
     public String getLanguage() {
@@ -159,22 +197,6 @@ public class Movie {
         this.status = status;
     }
 
-    public Long getTheatreId() {
-        return theatreId;
-    }
-
-    public void setTheatreId(Long theatreId) {
-        this.theatreId = theatreId;
-    }
-
-    public Long getShowTimeId() {
-        return showTimeId;
-    }
-
-    public void setShowTimeId(Long showTimeId) {
-        this.showTimeId = showTimeId;
-    }
-
     public boolean isOfferEligible() {
         return offerEligible;
     }
@@ -191,11 +213,11 @@ public class Movie {
         this.userId = userId;
     }
 
-    public List<Show> getShows() {
-        return shows;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public void setShows(List<Show> shows) {
-        this.shows = shows;
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 }

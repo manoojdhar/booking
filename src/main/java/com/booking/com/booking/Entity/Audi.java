@@ -1,65 +1,57 @@
 package com.booking.com.booking.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Entity(name = "audis") 
-@Table(name = "audis", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "theatre_id"}) } )    
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+@Entity
+@Table(
+    name = "audis",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"name", "theatre_id"})
+)
 public class Audi {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String image;
-    private Integer capacity;        
+    private Integer capacity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theatre_id", nullable = false)  
+    @JoinColumn(name = "theatre_id", nullable = false)
+    @JsonBackReference
     private Theatre theatre;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "show_id")
-    private Show show;
-    
+    @OneToMany(mappedBy = "audi", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Show> show;
+
     @CreationTimestamp
     private String createdAt;
-    
+
     @UpdateTimestamp
     private String updatedAt;
-    
-    
-    public Audi() {
-    }
 
-    public Audi(Long id, String name, Theatre theatre, Integer capacity, String image, Show show, String createdAt, String updatedAt) {
+    // Constructors
+    public Audi() {}
+
+    public Audi(Long id, String name, Theatre theatre, Integer capacity, String image, List<Show> show) {
         this.id = id;
         this.name = name;
         this.theatre = theatre;
         this.capacity = capacity;
         this.image = image;
         this.show = show;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     // Getters and Setters
-    public Show getShow() {
-        return show;
-    }
 
-    public void setShow(Show show) {
-        this.show = show;
-    }
-        
     public Long getId() {
         return id;
     }
@@ -92,22 +84,6 @@ public class Audi {
         this.image = image;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public Theatre getTheatre() {
         return theatre;
     }
@@ -116,10 +92,48 @@ public class Audi {
         this.theatre = theatre;
     }
 
-    // @Override
-    // public String toString() {
-    //     return "Audi [id=" + id + ", name=" + name + ", theatre=" + theatre + ", capacity=" + capacity + ", image="
-    //             + image + ", show=" + show + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
-    // }   
+    public List<Show> getShow() {
+        return show;
+    }
 
+    public void setShow(List<Show> show) {
+        this.show = show;
+    }
+
+    public String getCreatedAt() {   
+        return createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    // Equals and HashCode based on ID
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Audi)) return false;
+        Audi that = (Audi) o;
+        return id != null && id.equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    // Optional: toString without `theatre` to avoid recursive logging
+
+    @Override
+    public String toString() {
+        return "Audi{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", capacity=" + capacity +
+                ", image='" + image + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
