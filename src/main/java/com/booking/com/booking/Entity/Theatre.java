@@ -16,40 +16,62 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.CascadeType;
 
+// Theatre is an entity class that represents the theatres table in the database
+// It is annotated with @Entity to indicate that it is an entity class
 @Entity
 @Table( name = "theatres", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "city"}) } )
 public class Theatre {
+
+    // id is the primary key of the theatres table
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // name is the name of the theatre
     private String name;
+
+    // location is the location of the theatre
     private String location;
+
+    // city is the city of the theatre
     private String city;
+
+    // state is the state of the theatre
     private String state;
     
+    // pincode is the pincode of the theatre
     private String pincode;
 
+    // phone is the phone number of the theatre
     private String phone;
+
+    // email is the email of the theatre
     private String email;   
 
+    // website is the website of the theatre
     private String website;
 
+    // image is the image of the theatre
     private String image;
     
+    // audis is the list of audis of the theatre
     @OneToMany(mappedBy = "theatre", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference   
     private List<Audi> audis;
     
+    // createdAt is the timestamp when the theatre was created
     @CreationTimestamp
     private String createdAt;
     
+    // updatedAt is the timestamp when the theatre was updated
     @UpdateTimestamp
     private String updatedAt;   
 
+    // Constructors
     public Theatre() {
     }
 
+    // Parameterized constructor
     public Theatre(Long id, String name, String location, String city, String state, String pincode, String phone,
             String email, String website, String image, List<Audi> audis, String createdAt, String updatedAt) {
         this.id = id;
@@ -68,7 +90,7 @@ public class Theatre {
     }
     
 
-    // Getters and Setters
+    // Getters and Setters  
     public Long getId() {
         return id;
     }
@@ -182,6 +204,7 @@ public class Theatre {
         this.audis = audis;
     }
 
+    // equals and hashCode methods
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -190,11 +213,13 @@ public class Theatre {
         return id != null && id.equals(theatre.id);
     }
 
+    // hashCode method
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
 
+    // toString method
     @Override
     public String toString() {
         return "Theatre [id=" + id + ", name=" + name + ", location=" + location + ", city=" + city + ", state=" + state

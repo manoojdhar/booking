@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+// Audi is an entity class that represents the audis table in the database
 @Entity
 @Table(
     name = "audis",
@@ -15,42 +16,57 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 )
 public class Audi {
 
+    // id is the primary key of the audi table
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // name is the name of the audi
     private String name;
+    
+    // image is the image of the audi
     private String image;
+    
+    // capacity is the capacity of the audi
     private Integer capacity;
 
+    // theatre is the theatre to which the audi belongs
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theatre_id", nullable = false)
     @JsonBackReference
     private Theatre theatre;
 
+    // show is the show to which the audi belongs
     @OneToMany(mappedBy = "audi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Show> show;
 
+    // seats is the seats to which the audi belongs
+    @OneToMany(mappedBy = "audi", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AudiSeats> seats;
+
+    // createdAt is the timestamp when the audi was created
     @CreationTimestamp
     private String createdAt;
 
+    // updatedAt is the timestamp when the audi was updated
     @UpdateTimestamp
     private String updatedAt;
 
-    // Constructors
+    // setting up default no argument constructor
     public Audi() {}
 
-    public Audi(Long id, String name, Theatre theatre, Integer capacity, String image, List<Show> show) {
+    // setting up parameterized constructor
+    public Audi(Long id, String name, Theatre theatre, Integer capacity, String image, List<Show> show, List<AudiSeats> seats) {
         this.id = id;
         this.name = name;
         this.theatre = theatre;
         this.capacity = capacity;
         this.image = image;
         this.show = show;
+        this.seats = seats;
     }
 
     // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -107,8 +123,8 @@ public class Audi {
         return updatedAt;
     }
 
-    // Equals and HashCode based on ID
-
+    // Equals and HashCode based on ID 
+    // this method will be used to compare two objects where required
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,13 +133,13 @@ public class Audi {
         return id != null && id.equals(that.getId());
     }
 
+    // this method will be used to generate a hash code for the object
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
 
     // Optional: toString without `theatre` to avoid recursive logging
-
     @Override
     public String toString() {
         return "Audi{" +

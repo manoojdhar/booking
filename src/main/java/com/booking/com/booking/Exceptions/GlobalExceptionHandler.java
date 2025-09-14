@@ -9,9 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+// GlobalExceptionHandler is a class that handles exceptions and provides methods to perform exception handling
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     
+    // handleDuplicateKey is a method that handles duplicate key exceptions
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateKey(DataIntegrityViolationException ex) {
         Map<String, String> response = new HashMap<>();
@@ -19,6 +21,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    // handleException is a method that handles exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception ex) {
         Map<String, String> response = new HashMap<>();

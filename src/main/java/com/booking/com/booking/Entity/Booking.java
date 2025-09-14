@@ -1,31 +1,72 @@
 package com.booking.com.booking.Entity;
     
+import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-@Entity(name = "booking")
+// Booking is an entity class that represents the bookings table in the database
+// It is annotated with @Entity to indicate that it is an entity class
+@Entity
+@Table(name = "booking")
 public class Booking {
+
+    public enum BookingType {
+        INDIVIDUAL,
+        CORPORATE,
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String movieName;
     private String theatreName;
     private String showTime;
-    private String seatNumber;
+
+    // For individual bookings, this can hold one seat number.
+    // For bulk bookings, store comma-separated values or use another table for normalization.
+    @ElementCollection
+    @CollectionTable(name = "booking_seats", joinColumns = @JoinColumn(name = "booking_id"))
+    @Column(name = "seat_number")
+    private List<String> seatNumbers;
+
     private String offerCode;
+
+    @Enumerated(EnumType.STRING)
+    private BookingType bookingType;
+
+    // For individuals or company representatives
+    private String customerName;
+
+    // Optional for corporate required for corporate booking    
+    private String companyName;
+    private String contactEmail;
+    private String contactNumber;
+
+    private int numberOfSeats;
 
     @CreationTimestamp
     private String createdAt;
-    
+
     @UpdateTimestamp
     private String updatedAt;
+
     @ManyToOne
     @JoinColumn(name = "show_id")
     private Show show;
@@ -46,18 +87,28 @@ public class Booking {
     @JoinColumn(name = "offer_id")
     private Offers offer;
 
-    public Booking() {
-    }
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<Seat> seats;
 
-    public Booking(Long id, String movieName, String theatreName, String showTime, String seatNumber,
-            String offerCode, Show show, Movie movie, Theatre theatre, Audi audi, Offers offer, String createdAt,
-            String updatedAt) {
+    public Booking() {}
+
+    public Booking(Long id, String movieName, String theatreName, String showTime, List<String> seatNumbers,
+                   String offerCode, BookingType bookingType, String customerName, String companyName,
+                   String contactEmail, String contactNumber, int numberOfSeats,
+                   Show show, Movie movie, Theatre theatre, Audi audi, Offers offer,
+                   String createdAt, String updatedAt) {
         this.id = id;
         this.movieName = movieName;
         this.theatreName = theatreName;
         this.showTime = showTime;
-        this.seatNumber = seatNumber;
+        this.seatNumbers = seatNumbers;
         this.offerCode = offerCode;
+        this.bookingType = bookingType;
+        this.customerName = customerName;
+        this.companyName = companyName;
+        this.contactEmail = contactEmail;
+        this.contactNumber = contactNumber;
+        this.numberOfSeats = numberOfSeats;
         this.show = show;
         this.movie = movie;
         this.theatre = theatre;
@@ -65,8 +116,9 @@ public class Booking {
         this.offer = offer;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
+    } 
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -99,12 +151,12 @@ public class Booking {
         this.showTime = showTime;
     }
 
-    public String getSeatNumber() {
-        return seatNumber;
+    public List<String> getSeatNumbers() {
+        return seatNumbers;
     }
 
-    public void setSeatNumber(String seatNumber) {
-        this.seatNumber = seatNumber;
+    public void setSeatNumbers(List<String> seatNumbers) {
+        this.seatNumbers = seatNumbers;
     }
 
     public String getOfferCode() {
@@ -169,6 +221,63 @@ public class Booking {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getNumberOfSeats() {
+        return numberOfSeats;
+    }
+
+    public void setNumberOfSeats(int numberOfSeats) {
+        this.numberOfSeats = numberOfSeats;
+    }
+
+    public BookingType getBookingType() {
+        return bookingType;
+    }
+
+    public void setBookingType(BookingType bookingType) {
+        this.bookingType = bookingType;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Booking [id=" + id + ", movieName=" + movieName + ", theatreName=" + theatreName + ", showTime="
+                + showTime + ", seatNumbers=" + seatNumbers + ", offerCode=" + offerCode + ", bookingType="
+                + bookingType + ", customerName=" + customerName + ", companyName=" + companyName
+                + ", contactEmail=" + contactEmail + ", contactNumber=" + contactNumber + ", numberOfSeats="
+                + numberOfSeats + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
     }
 
 }

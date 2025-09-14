@@ -17,18 +17,22 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.booking.com.booking.Entity.Theatre;
 import com.booking.com.booking.services.TheatreService;
 
+// TheatreController will handle all the theatre related requests
 @RestController 
 @RequestMapping("/api/v1/theatres")
 public class TheatreController {
     
+    // Autowired TheatreService which is responsible for business logic and data access and transaction management
     @Autowired
     private TheatreService theatreService;
     
+    // Get all theatres
     @GetMapping
     public ResponseEntity<List<Theatre>> getAllTheatres() {
         return ResponseEntity.ok(theatreService.getTheatres());
     }
 
+    // Add a new theatre
     @PostMapping
     public ResponseEntity<Theatre> addTheatre(@RequestBody Theatre theatre) {
        Theatre theatre1 = theatreService.addTheatre(theatre);
@@ -43,20 +47,29 @@ public class TheatreController {
        return ResponseEntity.badRequest().body(null);
     }
 
+    // Get a theatre by id
     @GetMapping("/{id}")
     public ResponseEntity<Theatre> getTheatreById(@PathVariable Long id) {
         return ResponseEntity.ok(theatreService.getTheatreById(id));
     }
 
-    @DeleteMapping("/{id}")
+    // Delete a theatre by id
     public ResponseEntity<Theatre> deleteTheatre(@PathVariable Long id) {
         theatreService.deleteTheatre(id);
         return ResponseEntity.ok(theatreService.getTheatreById(id));
     }
 
+    // Update a theatre by id
     @PutMapping("/{id}")
     public ResponseEntity<Theatre> updateTheatre(@PathVariable Long id, @RequestBody Theatre theatre) {
         theatreService.updateTheatre(id, theatre);
         return ResponseEntity.ok(theatreService.getTheatreById(id));
+    }
+
+    // Delete all theatres
+    @DeleteMapping
+    public ResponseEntity<List<Theatre>> deleteAllTheatres() {
+        theatreService.deleteAllTheatres();
+        return ResponseEntity.ok(theatreService.getTheatres());
     }
 }

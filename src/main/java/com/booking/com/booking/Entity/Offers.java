@@ -16,16 +16,27 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+// Offers is an entity class that represents the offers table in the database
+// It is annotated with @Entity to indicate that it is an entity class
 @Entity
 @Table(name = "offers", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "isActive"}) } )
 public class Offers {
+    
+    // id is the primary key of the offers table
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    // name is the name of the offer
     private String name;
+    
+    // description is the description of the offer
     private String description;
+    
+    // discount is the discount of the offer
     private String discount;
-
+    
+    // shows is the shows of the offer
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
     private List<Show> shows;
 
@@ -37,16 +48,23 @@ public class Offers {
     @UpdateTimestamp
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", name = "updated_at")
     private LocalDateTime updatedAt;
-
+    
+    // startDate is the start date of the offer
     private LocalDateTime startDate;
+    
+    // endDate is the end date of the offer
     private LocalDateTime endDate;  
 
     private String image;
+    
+    // isActive is the active status of the offer
     private boolean isActive;
 
+    // No-args constructor
     public Offers() {
     }
 
+    // Parameterized constructor
     public Offers(Long id, String name, String description, String discount, LocalDateTime startDate, LocalDateTime endDate,
             String image, boolean isActive) {
         this.id = id;
@@ -124,6 +142,7 @@ public class Offers {
         this.isActive = isActive;
     }   
 
+    // toString method
     @Override
     public String toString() {  
         return "Offer [id=" + id + ", name=" + name + ", description=" + description + ", discount=" + discount

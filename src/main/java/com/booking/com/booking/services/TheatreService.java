@@ -13,7 +13,8 @@ import com.booking.com.booking.Entity.Audi;
 import com.booking.com.booking.Entity.Theatre;
 import com.booking.com.booking.repositories.TheatreRepository;
 
-@Service    
+// TheatreService is responsible for business logic and data access and transaction management
+@Service
 public class TheatreService {
     
     // Autowired TheatreRepository 
@@ -81,11 +82,13 @@ public class TheatreService {
                     existingTheatre.getAudis().add(incoming);
                 }
             }
-        }
-    
-        // Don't remove or clear existing audis — keep untouched ones
-    
+        }    
         return theatreRepository.save(existingTheatre);
+    }
+
+    // Delete All Theatres from the system
+    public void deleteAllTheatres() {
+        theatreRepository.deleteAll();
     }
     
 
