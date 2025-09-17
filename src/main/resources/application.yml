@@ -1,0 +1,58 @@
+server:
+  port: 8000
+  tomcat:
+    accesslog:
+      enabled: true
+      pattern: common
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+devtools:
+  restart:
+    enabled: true
+  livereload:
+    enabled: true
+
+spring:
+  application:
+    name: booking
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/booking
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    hikari:
+      pool-name: BookingPool
+      connection-timeout: 30000
+      idle-timeout: 600000
+      maximum-lifetime: 1800000
+      connection-test-query: SELECT 1
+      initialization-fail-timeout: 0
+      minimum-idle: 5
+      maximum-pool-size: 10
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.hibernate.orm.connections.pooling: WARN
+    org.hibernate.engine.jdbc.connections.internal: WARN
+    org.springframework.boot.devtools: DEBUG
+
+java:
+  toolchain:
+    language-version: 21
