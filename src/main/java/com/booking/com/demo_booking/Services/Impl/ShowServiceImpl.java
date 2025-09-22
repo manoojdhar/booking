@@ -77,6 +77,9 @@ public class ShowServiceImpl implements ShowService {
                 .map(seat -> ShowSeat.builder()
                         .show(show)
                         .seat(seat)
+                        .seatCategory(seat.getCategory())
+                        .seatType(seat.getSeatType())
+                        .seatNumber(seat.getSeatNumber())
                         .status(SeatStatus.AVAILABLE)
                         .price(show.getTicketPrice()) // or seat-based pricing
                         .row(seat.getRow())

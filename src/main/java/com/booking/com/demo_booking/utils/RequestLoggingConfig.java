@@ -1,3 +1,5 @@
+package com.booking.com.demo_booking.utils;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
